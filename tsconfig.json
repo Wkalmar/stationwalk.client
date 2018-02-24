@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "outFile": "bundle.js",
+        "noImplicitAny": true,
+        "typeRoots" : [
+            "./node_modules/@types"
+        ],
+        "module": "none"
+    }    
+}
