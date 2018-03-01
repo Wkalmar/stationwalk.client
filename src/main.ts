@@ -33,6 +33,27 @@
     .catch(() => {
         alert("smth wrong with backend");
     });
+
+    const stationsRequestResolver = (stationsResponse: StationWalk.Station[]) => {
+        stationsResponse.map((station: StationWalk.Station) => {
+            const mapper = new StationWalk.StationToMarkerMapper(station);            
+            mapper.map()
+                .addTo(mymap);
+        })
+    }
+    
+    fetch('http://localhost:8888/stations')
+    .then((response) => {
+        if (response.ok) {
+            return response.json();                        
+        } else {
+            throw new Error();
+        }
+    })
+    .then(stationsRequestResolver)
+    .catch(() => {
+        alert("smth wrong with backend");
+    });
     
     mymap.addEventListener('mousemove', (e : L.LeafletMouseEvent) => {
         const routeDrawer = StationWalk.RouteDrawer.drawer;
