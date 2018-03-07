@@ -16,7 +16,7 @@
     const routesRequestResolver = (routesResponse: StationWalk.Route[]) => {
         routesResponse.map((route: StationWalk.Route) => {
             const mapper = new StationWalk.RouteToCheckPointsMapper(route);
-            L.polyline(mapper.map())
+            mapper.map()
                 .addTo(mymap);
         })
     }

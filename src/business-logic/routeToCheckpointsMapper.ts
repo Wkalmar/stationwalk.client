@@ -25,12 +25,12 @@ namespace StationWalk {
             ]);
         }
     
-        map = () : L.LatLngExpression[] => {
+        map = () : L.Polyline => {
             let transformedCheckpoints : L.LatLngExpression[] = []
             this.mapStartStation(transformedCheckpoints); 
             this.mapCheckpoints(transformedCheckpoints);
             this.mapEndStation(transformedCheckpoints);
-            return transformedCheckpoints;
+            return L.polyline(transformedCheckpoints);
         }
     }
     
