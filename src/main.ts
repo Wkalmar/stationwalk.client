@@ -1,3 +1,10 @@
+import * as L from "leaflet";
+import { RouteToCheckPointsMapper } from "./business-logic/routeToCheckpointsMapper";
+import { StationToMarkerMapper } from "./business-logic/stationToPointMapper";
+import { RouteDrawer } from "./business-logic/routeDrawer";
+import { Route } from "./models/route";
+import { Station } from "./models/station";
+
 (function() {      
     const mapboxAccesToken = '<your key here>';
     const mapUrl = `https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=${mapboxAccesToken}`;
@@ -13,9 +20,9 @@
         accessToken: mapboxAccesToken
     }).addTo(mymap);      
 
-    const routesRequestResolver = (routesResponse: StationWalk.Route[]) => {
-        routesResponse.map((route: StationWalk.Route) => {
-            const mapper = new StationWalk.RouteToCheckPointsMapper(route);
+    const routesRequestResolver = (routesResponse: Route[]) => {
+        routesResponse.map((route: Route) => {
+            const mapper = new RouteToCheckPointsMapper(route);
             mapper.map()
                 .addTo(mymap);
         })
@@ -34,9 +41,9 @@
         alert("smth wrong with backend");
     });
 
-    const stationsRequestResolver = (stationsResponse: StationWalk.Station[]) => {
-        stationsResponse.map((station: StationWalk.Station) => {
-            const mapper = new StationWalk.StationToMarkerMapper(station);            
+    const stationsRequestResolver = (stationsResponse: Station[]) => {
+        stationsResponse.map((station: Station) => {
+            const mapper = new StationToMarkerMapper(station);            
             mapper.map()
                 .addTo(mymap);
         })
@@ -56,12 +63,12 @@
     });
     
     mymap.addEventListener('mousemove', (e : L.LeafletMouseEvent) => {
-        const routeDrawer = StationWalk.RouteDrawer.drawer;
+        const routeDrawer = RouteDrawer.drawer;
         routeDrawer.addHypotheticalPoint(mymap, e.latlng);
     });
     
     mymap.addEventListener('click', (e : L.LeafletMouseEvent) => {
-        const routeDrawer = StationWalk.RouteDrawer.drawer;
+        const routeDrawer = RouteDrawer.drawer;
         routeDrawer.addPoint(mymap, e.latlng);
     });    
 })();
