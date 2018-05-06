@@ -6,7 +6,7 @@ import { Route } from "./models/route";
 import { Station } from "./models/station";
 
 (function() {      
-    const mapboxAccesToken = '<your key here>';
+    const mapboxAccesToken = '<your key here>'; 
     const mapUrl = `https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=${mapboxAccesToken}`;
     const mapCopyright = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>';  
 
