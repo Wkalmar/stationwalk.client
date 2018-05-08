@@ -1,10 +1,15 @@
 {
     "compilerOptions": {
-        "outFile": "bundle.js",
+        "module": "es6",        
         "noImplicitAny": true,
+        "outDir": "./dist",
+        "sourceMap": true,
+        "target": "es5",
         "typeRoots" : [
             "./node_modules/@types"
-        ],
-        "module": "none"
-    }    
+        ]
+    },
+    "include": [
+        "src/**/*"
+    ]    
 }
