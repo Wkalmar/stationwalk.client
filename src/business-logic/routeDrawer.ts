@@ -1,3 +1,4 @@
+import { Distance } from "../utils/distance";
 import * as L from "leaflet";
 
 export class RouteDrawer {
@@ -20,7 +21,7 @@ export class RouteDrawer {
         if (this.points.length > 0) {
             let head = this.points[this.points.length - 1];
             this.isDrawingInProgress = 
-                new StationWalk.Distance(point, head).euclidean() > this.neglectibleDistance;
+                new Distance(point, head).euclidean() > this.neglectibleDistance;
         }       
     }
 
