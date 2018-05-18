@@ -1,0 +1,32 @@
+import { IController } from "./icontroller";
+import { Route } from "../models/route";
+import { RouteToCheckPointsMapper } from "../business-logic/routeToCheckpointsMapper";
+
+    export class HomeController implements IController {
+        constructor(private mymap: L.Map) {}
+
+        path = "home";
+        
+        routesRequestResolver = (routesResponse: Route[]) => {
+            routesResponse.map((route: Route) => {
+                const mapper = new RouteToCheckPointsMapper(route);
+                mapper.map()
+                    .addTo(this.mymap);
+            })
+        }
+        
+        go(): void {
+            fetch('http://localhost:8888/routes')
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();                        
+                } else {
+                    throw new Error();
+                }
+            })
+            .then(this.routesRequestResolver)
+            .catch(() => {
+                alert("smth wrong with backend");
+            });   
+        }
+    }
