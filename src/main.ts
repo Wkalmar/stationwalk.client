@@ -4,6 +4,9 @@ import { StationToMarkerMapper } from "./business-logic/stationToPointMapper";
 import { RouteDrawer } from "./business-logic/routeDrawer";
 import { Route } from "./models/route";
 import { Station } from "./models/station";
+import { HomeController } from "./controllers/homeController";
+import { SubmitController } from './controllers/submitController';
+import { IController } from './controllers/icontroller';
 
 (function() {      
     const mapboxAccesToken = '<your key here>'; 
@@ -18,28 +21,7 @@ import { Station } from "./models/station";
         maxZoom: 18,
         id: 'mapbox.streets',
         accessToken: mapboxAccesToken
-    }).addTo(mymap);      
-
-    const routesRequestResolver = (routesResponse: Route[]) => {
-        routesResponse.map((route: Route) => {
-            const mapper = new RouteToCheckPointsMapper(route);
-            mapper.map()
-                .addTo(mymap);
-        })
-    }
-    
-    fetch('http://localhost:8888/routes')
-    .then((response) => {
-        if (response.ok) {
-            return response.json();                        
-        } else {
-            throw new Error();
-        }
-    })
-    .then(routesRequestResolver)
-    .catch(() => {
-        alert("smth wrong with backend");
-    });
+    }).addTo(mymap);   
 
     const stationsRequestResolver = (stationsResponse: Station[]) => {
         stationsResponse.map((station: Station) => {
@@ -61,14 +43,26 @@ import { Station } from "./models/station";
     .catch(() => {
         alert("smth wrong with backend");
     });
+
+    let currentController : IController = new HomeController(mymap);
+    currentController.go();
     
-    mymap.addEventListener('mousemove', (e : L.LeafletMouseEvent) => {
-        const routeDrawer = RouteDrawer.drawer;
-        routeDrawer.addHypotheticalPoint(mymap, e.latlng);
+    document.getElementsByTagName('nav')[0]
+    .addEventListener('click', (e : MouseEvent) => {
+        const eventTarget = e.target as HTMLElement;
+        let newController : IController = null;        
+        switch (eventTarget.dataset.path) {
+            case "home":
+                newController = new HomeController(mymap);                
+                break;
+            case "submit":
+                newController = new SubmitController(mymap);
+                break
+        }
+        if (newController.path !== currentController.path) {
+            currentController = newController;
+            currentController.go();
+        }        
     });
     
-    mymap.addEventListener('click', (e : L.LeafletMouseEvent) => {
-        const routeDrawer = RouteDrawer.drawer;
-        routeDrawer.addPoint(mymap, e.latlng);
-    });    
 })();
