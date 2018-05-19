@@ -17,4 +17,8 @@ export class SubmitController implements IController {
             routeDrawer.addPoint(this.mymap, e.latlng);
         });
     }
+    
+    clear(): void {
+        this.mymap.clearAllEventListeners();
+    }
 }

@@ -6,12 +6,15 @@ import { RouteToCheckPointsMapper } from "../business-logic/routeToCheckpointsMa
         constructor(private mymap: L.Map) {}
 
         path = "home";
+
+        private checkPointsCollection: L.Polyline[] = [];
         
         routesRequestResolver = (routesResponse: Route[]) => {
             routesResponse.map((route: Route) => {
                 const mapper = new RouteToCheckPointsMapper(route);
-                mapper.map()
-                    .addTo(this.mymap);
+                let checkpoints = mapper.map();
+                checkpoints.addTo(this.mymap);      
+                this.checkPointsCollection.push(checkpoints);          
             })
         }
         
@@ -28,5 +31,10 @@ import { RouteToCheckPointsMapper } from "../business-logic/routeToCheckpointsMa
             .catch(() => {
                 alert("smth wrong with backend");
             });   
+        }
+
+        clear(): void {
+            this.checkPointsCollection.map(p => p.removeFrom(this.mymap));
+            this.checkPointsCollection = [];
         }
     }
