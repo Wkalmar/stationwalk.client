@@ -1,6 +1,6 @@
 import * as L from "leaflet";
 import { RouteToCheckPointsMapper } from "./business-logic/routeToCheckpointsMapper";
-import { StationToMarkerMapper } from "./business-logic/stationToPointMapper";
+import { StationToMarkerMapper } from "./business-logic/stationToMarkerMapper";
 import { RouteDrawer } from "./business-logic/routeDrawer";
 import { Route } from "./models/route";
 import { Station } from "./models/station";
