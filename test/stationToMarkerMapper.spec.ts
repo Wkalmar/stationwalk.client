@@ -15,4 +15,24 @@ describe('StationToMarkerMapper', () => {
     expect(resultLatLng.lat).to.equal(58)
     expect(resultLatLng.lng).to.equal(42)
   })
+
+  it('should map point to marker correctly 2', () => {
+    const station: Station = new Station()
+    station.location = {
+      lattitude: 13,
+      longitude: 16
+    }
+    const mapper: StationToMarkerMapper = new StationToMarkerMapper(station)
+    const result = mapper.map();
+    const resultLatLng = result.getLatLng()
+    expect(resultLatLng.lat).to.equal(13)
+    expect(resultLatLng.lng).to.equal(16)
+  })
+
+  it('should handle null gracefully', () => {
+    const mapper: StationToMarkerMapper = new StationToMarkerMapper(null)
+    const result = mapper.map();
+    const resultLatLng = result.getLatLng()
+    expect(resultLatLng.lat).to.be.undefined;    
+  })
 })
