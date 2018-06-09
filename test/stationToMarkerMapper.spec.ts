@@ -28,11 +28,4 @@ describe('StationToMarkerMapper', () => {
     expect(resultLatLng.lat).to.equal(13)
     expect(resultLatLng.lng).to.equal(16)
   })
-
-  it('should handle null gracefully', () => {
-    const mapper: StationToMarkerMapper = new StationToMarkerMapper(null)
-    const result = mapper.map();
-    const resultLatLng = result.getLatLng()
-    expect(resultLatLng.lat).to.be.undefined;    
-  })
 })
