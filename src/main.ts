@@ -1,40 +1,37 @@
 import * as L from "leaflet";
-import { RouteToCheckPointsMapper } from "./business-logic/routeToCheckpointsMapper";
-import { StationToMarkerMapper } from "./business-logic/stationToPointMapper";
-import { RouteDrawer } from "./business-logic/routeDrawer";
-import { Route } from "./models/route";
+import { StationToMarkerMapper } from "./business-logic/stationToMarkerMapper";
 import { Station } from "./models/station";
-import { HomeController } from "./controllers/homeController";
+import { HomeController } from './controllers/homeController';
 import { SubmitController } from './controllers/submitController';
 import { IController } from './controllers/icontroller';
 
-(function() {      
-    const mapboxAccesToken = '<your key here>'; 
+(function() {
+    const mapboxAccesToken = '<your key here>';
     const mapUrl = `https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=${mapboxAccesToken}`;
-    const mapCopyright = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>';  
+    const mapCopyright = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>';
 
-    
-    
+
+
     const mymap = L.map('mapid').setView([50.415, 30.521], 12);
     L.tileLayer(mapUrl, {
         attribution: mapCopyright,
         maxZoom: 18,
         id: 'mapbox.streets',
         accessToken: mapboxAccesToken
-    }).addTo(mymap);   
+    }).addTo(mymap);
 
     const stationsRequestResolver = (stationsResponse: Station[]) => {
         stationsResponse.map((station: Station) => {
-            const mapper = new StationToMarkerMapper(station);            
+            const mapper = new StationToMarkerMapper(station);
             mapper.map()
                 .addTo(mymap);
         })
     }
-    
+
     fetch('http://localhost:8888/stations')
     .then((response) => {
         if (response.ok) {
-            return response.json();                        
+            return response.json();
         } else {
             throw new Error();
         }
@@ -46,23 +43,26 @@ import { IController } from './controllers/icontroller';
 
     let currentController : IController = new HomeController(mymap);
     currentController.go();
-    
+
     document.getElementsByTagName('nav')[0]
     .addEventListener('click', (e : MouseEvent) => {
         const eventTarget = e.target as HTMLElement;
-        let newController : IController = null;        
+        let newController : IController;
         switch (eventTarget.dataset.path) {
             case "home":
-                newController = new HomeController(mymap);                
+                newController = new HomeController(mymap);
                 break;
             case "submit":
                 newController = new SubmitController(mymap);
-                break
+                break;
+            default:
+                newController = new HomeController(mymap);
+                break;
         }
         if (newController.path !== currentController.path) {
             currentController = newController;
             currentController.go();
-        }        
+        }
     });
-    
+
 })();

@@ -1,7 +1,12 @@
 {
     "compilerOptions": {
-        "module": "es6",        
+        "module": "es6",
+        "alwaysStrict": true,
         "noImplicitAny": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
         "outDir": "./dist",
         "sourceMap": true,
         "target": "es5",
@@ -11,5 +16,5 @@
     },
     "include": [
         "src/**/*"
-    ]    
+    ]
 }
