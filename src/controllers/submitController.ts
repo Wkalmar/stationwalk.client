@@ -20,8 +20,11 @@ export class SubmitController implements IController {
         });
 
         document.addEventListener('drawingSubmitted', (e: Event) => {
-            console.log('submitted');
-        })
+            let modal = document.getElementById("submitmodal");
+            if (modal) {
+                modal.style.display = 'block';
+            }
+        });
     }
 
     clear(): void {
