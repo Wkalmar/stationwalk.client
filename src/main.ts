@@ -4,6 +4,7 @@ import { Station } from "./models/station";
 import { HomeController } from './controllers/homeController';
 import { SubmitController } from './controllers/submitController';
 import { IController } from './controllers/icontroller';
+import { StationsContainer } from "./business-logic/stationsContainer";
 
 (function() {
     const mapboxAccesToken = '<your key here>';
@@ -20,8 +21,9 @@ import { IController } from './controllers/icontroller';
         accessToken: mapboxAccesToken
     }).addTo(mymap);
 
-    const stationsRequestResolver = (stationsResponse: Station[]) => {
-        stationsResponse.map((station: Station) => {
+    const stationsRequestResolver = (stations: Station[]) => {
+        StationsContainer.stations = stations;
+        stations.map((station: Station) => {
             const mapper = new StationToMarkerMapper(station);
             mapper.map()
                 .addTo(mymap);
