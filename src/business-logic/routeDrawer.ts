@@ -6,6 +6,7 @@ import * as L from "leaflet";
 export class RouteDrawer {
     private neglectibleDistance: number = 0.0003;
     private startStation : Station;
+    private endStation: Station;
 
     private isDrawingInProgress : boolean = false;
     private points: [number, number][] = [];
@@ -25,13 +26,8 @@ export class RouteDrawer {
             let head = this.points[this.points.length - 1];
             this.isDrawingInProgress =
                 new Distance(point, head).euclidean() > this.neglectibleDistance;
-            if (!this.isDrawingInProgress) {
-                document.dispatchEvent(new Event('drawingSubmitted'));
-            }
         }
     }
-
-    private isFirstPoiint : boolean = this.points.length === 0;
 
     private getClosestStation = (latLngPoint : [number, number]) => {
         return StationsContainer.stations.sort((a,b) => {
@@ -47,13 +43,17 @@ export class RouteDrawer {
 
     private drawPointIfNeeded = (map : L.Map, latLngPoint : [number, number]) => {
         if (this.isDrawingInProgress) {
-            if (this.isFirstPoiint) {
+            if (this.points.length === 0) {
                 this.startStation = this.getClosestStation(latLngPoint);
-                latLngPoint = [this.startStation.location.lattitude, this.startStation.location.longitude]
+                latLngPoint = [this.startStation.location.lattitude, this.startStation.location.longitude];
             }
-            this.points.push(latLngPoint);
-            L.polyline(this.points).addTo(map);
+        } else {
+            this.endStation = this.getClosestStation(latLngPoint);
+            latLngPoint = [this.endStation.location.lattitude, this.endStation.location.longitude];
+            document.dispatchEvent(new Event('drawingSubmitted'));
         }
+        this.points.push(latLngPoint);
+        L.polyline(this.points).addTo(map);
     }
 
     addPoint = (map : L.Map, point : L.LatLng) => {
