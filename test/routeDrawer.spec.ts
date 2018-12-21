@@ -4,6 +4,14 @@ import * as L from "leaflet";
 
 describe("RouteDrawer", () => {
     it("should add hypothetical point if drawing is in progress", () => {
+        StationsContainer.stations = [{
+            name: "station1",
+            location: {
+                lattitude: 10,
+                longitude: 10
+            },
+            branch: { Case: "red" }
+        }];
         const map = L.map(document.createElement("div"));
         const routeDrawer = new RouteDrawer();
         const point = new L.LatLng(10, 10);
@@ -20,6 +28,14 @@ describe("RouteDrawer", () => {
     });
 
     it("should add hypothetical point if drawing is in progress and a couple of points added", () => {
+        StationsContainer.stations = [{
+            name: "station1",
+            location: {
+                lattitude: 10.2,
+                longitude: 10.2
+            },
+            branch: { Case: "red" }
+        }];
         const map = L.map(document.createElement("div"));
         const routeDrawer = new RouteDrawer();
         const point = new L.LatLng(10, 10);
@@ -40,6 +56,14 @@ describe("RouteDrawer", () => {
     });
 
     it("should not add hypothetical point if drawing is not in progress", () => {
+        StationsContainer.stations = [{
+            name: "station1",
+            location: {
+                lattitude: 10,
+                longitude: 10
+            },
+            branch: { Case: "red" }
+        }];
         const map = L.map(document.createElement("div"));
         const routeDrawer = new RouteDrawer();
         const point = new L.LatLng(10, 10);
@@ -54,7 +78,7 @@ describe("RouteDrawer", () => {
         routeDrawer.addPoint(map, point);
         routeDrawer.addPoint(map, point2);
         routeDrawer.addHypotheticalPoint(map, newPoint);
-        expect(L.polyline).toHaveBeenCalledTimes(1); //only points for real route
+        expect(L.polyline).toHaveBeenCalledTimes(2); //only points for real route
     });
 
     it("should set startStation correctly", () => {
@@ -79,6 +103,12 @@ describe("RouteDrawer", () => {
         const point = new L.LatLng(9.9, 9.9);
         const point2 = new L.LatLng(11.5, 11.5);
         const point3 = new L.LatLng(12, 12);
+        spyOn(L, 'polyline').and.callFake(() =>{
+            return {
+                addTo: () => {},
+                removeFrom: () => {}
+            }
+        });
         routeDrawer.addPoint(map, point);
         routeDrawer.addPoint(map, point2);
         routeDrawer.addPoint(map, point3);
@@ -107,6 +137,12 @@ describe("RouteDrawer", () => {
         const point = new L.LatLng(10.9, 10.9);
         const point2 = new L.LatLng(11.5, 11.5);
         const point3 = new L.LatLng(12, 12);
+        spyOn(L, 'polyline').and.callFake(() =>{
+            return {
+                addTo: () => {},
+                removeFrom: () => {}
+            }
+        });
         routeDrawer.addPoint(map, point);
         routeDrawer.addPoint(map, point2);
         routeDrawer.addPoint(map, point3);

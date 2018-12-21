@@ -6,7 +6,7 @@
         "noImplicitThis": true,
         "noUnusedLocals": true,
         "strictNullChecks": true,
-        "strictFunctionTypes": true,
+        "strictFunctionTypes": false,
         "outDir": "./dist",
         "sourceMap": true,
         "target": "es5",
