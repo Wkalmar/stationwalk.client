@@ -7,6 +7,9 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin([{
       from: './index.html'
+    }]),
+    new CopyWebpackPlugin([{
+      from: './styles/*'
     }])
   ],
   module: {

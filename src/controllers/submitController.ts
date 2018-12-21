@@ -18,6 +18,13 @@ export class SubmitController implements IController {
             const routeDrawer = RouteDrawer.drawer;
             routeDrawer.addPoint(this.mymap, mouseEvent.latlng);
         });
+
+        document.addEventListener('drawingSubmitted', (e: Event) => {
+            let modal = document.getElementById("submitmodal");
+            if (modal) {
+                modal.style.display = 'block';
+            }
+        });
     }
 
     clear(): void {
