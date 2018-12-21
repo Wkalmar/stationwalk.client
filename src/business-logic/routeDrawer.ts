@@ -1,4 +1,6 @@
+import { Route } from './../models/route';
 import { Station } from './../models/station';
+import { Location } from './../models/location';
 import { StationsContainer } from './stationsContainer';
 import { Distance } from "../utils/distance";
 import * as L from "leaflet";
@@ -41,6 +43,19 @@ export class RouteDrawer {
         })[0];
     }
 
+    private transformStateToRoute = () : Route => {
+        let route = new Route()
+        route.stationStart = this.startStation;
+        route.stationEnd = this.endStation;
+        route.checkpoints = this.points.slice(1, this.points.length - 1).map(p => {
+            let location = new Location();
+            location.lattitude = p[0];
+            location.longitude = p[1];
+            return location;
+        });
+        return route;
+    }
+
     private drawPointIfNeeded = (map : L.Map, latLngPoint : [number, number]) => {
         if (this.isDrawingInProgress) {
             if (this.points.length === 0) {
@@ -50,7 +65,9 @@ export class RouteDrawer {
         } else {
             this.endStation = this.getClosestStation(latLngPoint);
             latLngPoint = [this.endStation.location.lattitude, this.endStation.location.longitude];
-            document.dispatchEvent(new Event('drawingSubmitted'));
+            document.dispatchEvent(new CustomEvent('drawingSubmitted', {
+                detail: this.transformStateToRoute()
+            }));
         }
         this.points.push(latLngPoint);
         L.polyline(this.points).addTo(map);
