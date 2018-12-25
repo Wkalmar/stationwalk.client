@@ -8,21 +8,21 @@ import { RouteToCheckPointsMapper } from "../business-logic/routeToCheckpointsMa
         path = "home";
 
         private checkPointsCollection: L.Polyline[] = [];
-        
+
         routesRequestResolver = (routesResponse: Route[]) => {
             routesResponse.map((route: Route) => {
                 const mapper = new RouteToCheckPointsMapper(route);
                 let checkpoints = mapper.map();
-                checkpoints.addTo(this.mymap);      
-                this.checkPointsCollection.push(checkpoints);          
+                checkpoints.addTo(this.mymap);
+                this.checkPointsCollection.push(checkpoints);
             })
         }
-        
+
         go(): void {
             fetch('http://localhost:8888/routes')
             .then((response) => {
                 if (response.ok) {
-                    return response.json();                        
+                    return response.json();
                 } else {
                     throw new Error();
                 }
@@ -30,7 +30,7 @@ import { RouteToCheckPointsMapper } from "../business-logic/routeToCheckpointsMa
             .then(this.routesRequestResolver)
             .catch(() => {
                 alert("smth wrong with backend");
-            });   
+            });
         }
 
         clear(): void {
