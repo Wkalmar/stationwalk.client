@@ -1,3 +1,4 @@
+import { HomeController } from './homeController';
 import { Route } from './../models/route';
 import { IController } from "./icontroller";
 import { RouteDrawer } from "../business-logic/routeDrawer";
@@ -11,20 +12,29 @@ export class SubmitController implements IController {
 
     private controllerTemplate : string =
     `<div id="submit-modal" class="submit-modal">
-        <div class="submit-modal-content">
-        <span class="submit-modal"></span>
-        <div>
-            <label for="route-name">Name</label>
-            <input type="text" id="route-name" placeholder="Enter route name...">
+        <div id="submit-modal-form">
+            <div class="submit-modal-content">
+                <div>
+                    <label for="route-name">Name</label>
+                    <input type="text" id="route-name" placeholder="Enter route name...">
+                </div>
+                <button id="route-submit-button">Submit</button>
+            </div>
         </div>
-        <button id="route-submit-button">Submit</button>
+        <div id="submit-modal-success" style="display: none;">
+            Your route submitted successfully
+            <button id="route-submit-goto-home">Go to home page</button>
         </div>
     </div>`
 
-    private addFormSubmittedEventListener() {
+    private addSubmitFormEventListeners() {
         let submitButton = document.getElementById('route-submit-button');
         if (submitButton != null)
             submitButton.addEventListener('click', this.submit);
+
+        let goToHomeButton  = document.getElementById('route-submit-goto-home');
+        if (goToHomeButton != null)
+            goToHomeButton.addEventListener('click', this.goToHome);
     }
 
     private showSubmitModal = (e: CustomEvent) => {
@@ -33,6 +43,12 @@ export class SubmitController implements IController {
             modal.style.display = 'block';
             this.routeToSubmit = e.detail;
         }
+    }
+
+    private goToHome = () => {
+        this.clear();
+        const homeController = new HomeController(this.mymap);
+        homeController.go();
     }
 
     private addDrawingSubmittedEventListener() {
@@ -56,7 +72,7 @@ export class SubmitController implements IController {
         this.addControllerTemplate();
         this.addMapEventListeners();
         this.addDrawingSubmittedEventListener();
-        this.addFormSubmittedEventListener();
+        this.addSubmitFormEventListeners();
     }
     private addControllerTemplate() {
         let controllerTemplateContainer = document.getElementById('controller-template-container');
@@ -75,25 +91,41 @@ export class SubmitController implements IController {
         }
     }
 
-    private removeSubmitEventListeners() {
+    private removeSubmitFormEventListeners() {
         let submitButton = document.getElementById('route-submit-button');
         if (submitButton != null)
             submitButton.removeEventListener('click', this.submit);
+
+        let goToHomeButton  = document.getElementById('route-submit-goto-home');
+        if (goToHomeButton != null)
+            goToHomeButton.addEventListener('click', this.goToHome);
     }
 
     private removeMapEventListeners() {
         this.mymap.clearAllEventListeners();
     }
 
-    private removeFormSubmittedEventListeners() {
+    private removeDrawingSubmittedeventListener() {
         document.removeEventListener('click', this.showSubmitModal);
     }
 
     clear(): void {
         this.removeMapEventListeners();
-        this.removeSubmitEventListeners();
-        this.removeFormSubmittedEventListeners();
+        this.removeSubmitFormEventListeners();
+        this.removeDrawingSubmittedeventListener();
         this.removeControllerTemplate();
+    }
+
+    private showSuccessNotification = () => {
+        let submitSuccessNotificationContrainer = document.getElementById('submit-modal-success');
+        let submitFormContainer = document.getElementById('submit-modal-form');
+
+        if (!submitFormContainer || !submitSuccessNotificationContrainer) {
+            throw new Error("Invalid markup. Expected to have form container and successfull notification container");
+        }
+
+        (submitFormContainer as HTMLElement).style.display = 'none';
+        (submitSuccessNotificationContrainer as HTMLElement).style.display = 'block';
     }
 
     private submit = () : void => {
@@ -112,6 +144,8 @@ export class SubmitController implements IController {
             },
             body: JSON.stringify(this.routeToSubmit)
         })
-        .then(() => {});
+        .then(() => {
+            this.showSuccessNotification();
+        });
     }
 }

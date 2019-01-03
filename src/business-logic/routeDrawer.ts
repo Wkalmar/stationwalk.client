@@ -16,7 +16,7 @@ export class RouteDrawer {
     private initDrawingIfNeeded = (map : L.Map, point: [number, number]) => {
         if (!this.isDrawingInProgress) {
             this.isDrawingInProgress = true;
-            map.setView(point, 14);
+            map.setView(point, 15);
         }
     }
     private mapLatLngToExpression = (point : L.LatLng) : [number, number] => {

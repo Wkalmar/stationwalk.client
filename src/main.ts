@@ -62,6 +62,7 @@ import { StationsContainer } from "./business-logic/stationsContainer";
                 break;
         }
         if (newController.path !== currentController.path) {
+            currentController.clear();
             currentController = newController;
             currentController.go();
         }
