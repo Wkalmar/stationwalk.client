@@ -22,6 +22,7 @@ import { RouteToCheckPointsMapper } from "../business-logic/routeToCheckpointsMa
             fetch('http://localhost:8888/routes')
             .then((response) => {
                 if (response.ok) {
+                    this.mymap.setView([50.415, 30.521], 12);
                     return response.json();
                 } else {
                     throw new Error();

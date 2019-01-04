@@ -11,9 +11,7 @@ import { StationsContainer } from "./business-logic/stationsContainer";
     const mapUrl = `https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=${mapboxAccesToken}`;
     const mapCopyright = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>';
 
-
-
-    const mymap = L.map('mapid').setView([50.415, 30.521], 12);
+    const mymap = L.map('mapid');
     L.tileLayer(mapUrl, {
         attribution: mapCopyright,
         maxZoom: 18,
@@ -62,6 +60,7 @@ import { StationsContainer } from "./business-logic/stationsContainer";
                 break;
         }
         if (newController.path !== currentController.path) {
+            currentController.clear();
             currentController = newController;
             currentController.go();
         }
