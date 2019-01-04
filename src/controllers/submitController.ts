@@ -62,17 +62,21 @@ export class SubmitController implements IController {
         document.addEventListener('drawingSubmitted', this.showSubmitModal);
     }
 
+    private addHypotheticalPoint = (e: L.LeafletEvent) => {
+        const mouseEvent = e as L.LeafletMouseEvent;
+        const routeDrawer = RouteDrawer.drawer;
+        routeDrawer.addHypotheticalPoint(this.mymap, mouseEvent.latlng);
+    }
+
+    private addPoint = (e: L.LeafletEvent) => {
+        const mouseEvent = e as L.LeafletMouseEvent;
+        const routeDrawer = RouteDrawer.drawer;
+        routeDrawer.addPoint(this.mymap, mouseEvent.latlng);
+    }
+
     private addMapEventListeners() {
-        this.mymap.addEventListener('mousemove', (e: L.LeafletEvent) => {
-            const mouseEvent = e as L.LeafletMouseEvent;
-            const routeDrawer = RouteDrawer.drawer;
-            routeDrawer.addHypotheticalPoint(this.mymap, mouseEvent.latlng);
-        });
-        this.mymap.addEventListener('click', (e: L.LeafletEvent) => {
-            const mouseEvent = e as L.LeafletMouseEvent;
-            const routeDrawer = RouteDrawer.drawer;
-            routeDrawer.addPoint(this.mymap, mouseEvent.latlng);
-        });
+        this.mymap.addEventListener('mousemove', this.addHypotheticalPoint);
+        this.mymap.addEventListener('click', this.addPoint);
     }
 
     go(): void {
@@ -109,7 +113,8 @@ export class SubmitController implements IController {
     }
 
     private removeMapEventListeners() {
-        this.mymap.clearAllEventListeners();
+        this.mymap.removeEventListener('mousemove', this.addHypotheticalPoint);
+        this.mymap.removeEventListener('click', this.addPoint);
     }
 
     private removeDrawingSubmittedeventListener() {
