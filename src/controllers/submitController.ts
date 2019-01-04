@@ -8,37 +8,44 @@ export class SubmitController implements IController {
 
     path = "submit";
 
+    private submitModalId : string = "submit-modal";
+    private submitModalFormId : string = "submit-modal-form";
+    private routeNameInputId : string = "route-name";
+    private submitButtonId : string = "route-submit-button";
+    private submitSuccessNotificationContainerId : string = "submit-modal-success";
+    private gotoHomeButtonId : string = "route-submit-goto-home";
+
     private routeToSubmit : Route;
 
     private controllerTemplate : string =
-    `<div id="submit-modal" class="submit-modal">
-        <div id="submit-modal-form">
+    `<div id="${this.submitModalId}" class="submit-modal">
+        <div id="${this.submitModalFormId}">
             <div class="submit-modal-content">
                 <div>
-                    <label for="route-name">Name</label>
-                    <input type="text" id="route-name" placeholder="Enter route name...">
+                    <label for="${this.routeNameInputId}">Name</label>
+                    <input type="text" id="${this.routeNameInputId}" placeholder="Enter route name...">
                 </div>
-                <button id="route-submit-button">Submit</button>
+                <button id="${this.submitButtonId}">Submit</button>
             </div>
         </div>
-        <div id="submit-modal-success" style="display: none;">
+        <div id="${this.submitSuccessNotificationContainerId}" style="display: none;">
             Your route submitted successfully
-            <button id="route-submit-goto-home">Go to home page</button>
+            <button id="${this.gotoHomeButtonId}">Go to home page</button>
         </div>
     </div>`
 
     private addSubmitFormEventListeners() {
-        let submitButton = document.getElementById('route-submit-button');
+        let submitButton = document.getElementById(this.submitButtonId);
         if (submitButton != null)
             submitButton.addEventListener('click', this.submit);
 
-        let goToHomeButton  = document.getElementById('route-submit-goto-home');
+        let goToHomeButton  = document.getElementById(this.gotoHomeButtonId);
         if (goToHomeButton != null)
             goToHomeButton.addEventListener('click', this.goToHome);
     }
 
     private showSubmitModal = (e: CustomEvent) => {
-        let modal = document.getElementById("submit-modal");
+        let modal = document.getElementById(this.submitModalId);
         if (modal) {
             modal.style.display = 'block';
             this.routeToSubmit = e.detail;
@@ -84,7 +91,7 @@ export class SubmitController implements IController {
     }
 
     private removeControllerTemplate() {
-        let controllerTemplateContainer = document.getElementById('submit-modal');
+        let controllerTemplateContainer = document.getElementById(this.submitModalId);
         if (controllerTemplateContainer != null) {
             var container = controllerTemplateContainer as HTMLElement;
             container.remove();
@@ -92,11 +99,11 @@ export class SubmitController implements IController {
     }
 
     private removeSubmitFormEventListeners() {
-        let submitButton = document.getElementById('route-submit-button');
+        let submitButton = document.getElementById(this.submitButtonId);
         if (submitButton != null)
             submitButton.removeEventListener('click', this.submit);
 
-        let goToHomeButton  = document.getElementById('route-submit-goto-home');
+        let goToHomeButton  = document.getElementById(this.gotoHomeButtonId);
         if (goToHomeButton != null)
             goToHomeButton.addEventListener('click', this.goToHome);
     }
@@ -117,8 +124,8 @@ export class SubmitController implements IController {
     }
 
     private showSuccessNotification = () => {
-        let submitSuccessNotificationContrainer = document.getElementById('submit-modal-success');
-        let submitFormContainer = document.getElementById('submit-modal-form');
+        let submitSuccessNotificationContrainer = document.getElementById(this.submitSuccessNotificationContainerId);
+        let submitFormContainer = document.getElementById(this.submitModalFormId);
 
         if (!submitFormContainer || !submitSuccessNotificationContrainer) {
             throw new Error("Invalid markup. Expected to have form container and successfull notification container");
@@ -129,7 +136,7 @@ export class SubmitController implements IController {
     }
 
     private submit = () : void => {
-        let nameInput = document.getElementById('route-name') as HTMLInputElement;
+        let nameInput = document.getElementById(this.routeNameInputId) as HTMLInputElement;
         let inputText = nameInput && nameInput.value;
         if (!inputText) {
             alert('enter route name');
